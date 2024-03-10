@@ -1,2 +1,2 @@
 # leetcode
- leetcode-striver-sde-sheet
+ leetcode-striver-blind75
