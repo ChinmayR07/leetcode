@@ -1,0 +1,50 @@
+class Solution {
+    public int missingNumber(int[] nums) {
+        // brute force
+        int n = nums.length;
+        for (int i = 0; i <= n; i++) {
+            int flag = 0;
+            for (int j = 0; j < n; j++) {
+                if (nums[j] == i) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 0)
+                return i;
+        }
+        return -1;
+
+        // Better Solution
+
+        int[] hash = new int[nums.length + 1];
+        int flag = 0;
+        for (int i = 0; i < nums.length; i++) {
+            hash[nums[i]] = 1;
+        }
+        for (int i = 0; i <= nums.length; i++) {
+            if (hash[i] == 0) {
+                flag = i;
+            }
+        }
+        return flag;
+
+        // Optimal Solution1
+        int sum = 0, totalsum = 0;
+        int n = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        totalsum = (n * (n + 1)) / 2;
+
+        int missingnum = totalsum - sum;
+        return missingnum;
+
+        // Optimal Solution2
+        int missing = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            missing ^= i ^ nums[i];
+        }
+        return missing;
+    }
+}
