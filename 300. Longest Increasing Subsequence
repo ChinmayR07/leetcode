@@ -1,0 +1,86 @@
+class Solution {
+
+    //Brute Force - Recursion
+    private int solve(int curr, int prev, int[] nums, int n) {
+
+        if(curr == n) return 0;
+
+        int len = 0 + solve(curr+1, prev, nums, n); //not pick case 
+        if(prev == -1 || nums[curr] > nums[prev])   // pick case
+            len = Math.max(len, 1 + solve(curr+1, curr, nums, n));
+
+        return len;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        return solve(0, -1, nums, n);
+    }
+
+    //Memoization
+
+    private int solve(int curr, int prev, int[] nums, int n, int[][] dp) {
+
+        if(curr == n) return 0;
+
+        if(dp[curr][prev + 1] != -1) return dp[curr][prev+1];
+        int len = 0 + solve(curr+1, prev, nums, n, dp); //not pick case 
+        if(prev == -1 || nums[curr] > nums[prev])   // pick case
+            len = Math.max(len, 1 + solve(curr+1, curr, nums, n, dp));
+
+        return dp[curr][prev+1] = len;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][n+1];
+        for(int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return solve(0, -1, nums, n, dp);
+    }
+
+    // Tabulation
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int maxi = 1;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        for(int curr=0; curr<n; curr++) {
+            for(int prev=0; prev<curr;prev++) {
+                if(nums[prev] < nums[curr]) {
+                    dp[curr] = Math.max(dp[curr], 1+dp[prev]);
+                }
+            }
+            maxi = Math.max(maxi, dp[curr]);
+        }
+        return maxi;
+    }
+
+    //Space Optimisation
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> temp = new ArrayList<>();
+        int n = nums.length;
+        temp.add(nums[0]);
+
+        int len = 1;
+
+        for(int i = 1; i < n; i++) {
+            if(nums[i] > temp.get(temp.size() - 1)) {
+                temp.add(nums[i]);
+                len++;
+            } else {
+                int ind = Collections.binarySearch(temp, nums[i]);
+
+                if(ind < 0) {
+                    ind = -(ind + 1);
+                }
+
+                temp.set(ind, nums[i]);
+            }
+        }
+
+        return len;
+    }   
+}
